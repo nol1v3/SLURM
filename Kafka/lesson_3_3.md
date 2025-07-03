@@ -38,6 +38,11 @@ touch /tmp/data && tail -f -n0 /tmp/data | ./bin/kafka-console-producer.sh --top
 for i in $(seq 1 3600); do echo "test${i}" >> /tmp/data; sleep 1; done
 ```
 Читая сообщения спустя минуту, мы по-прежнему видим старые сообщения!
+
+Структура партиции
+ 
+Полный перечень настроек здесь:
+https://kafka.apache.org/documentation/#configuration
 ```bash
 ./bin/kafka-console-consumer.sh --topic registrations --bootstrap-server localhost:9092 --consumer-property auto.offset.reset=earliest
 ```
