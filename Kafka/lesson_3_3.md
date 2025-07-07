@@ -50,11 +50,11 @@ https://kafka.apache.org/documentation/#configuration
 
 # Очистка топика (продолжение).
 Заглянув в папку с данными, видим активный сегмент (а также старые сегменты, помеченные как "deleted").
-```
+```bash
 ls -la /tmp/kafka-logs/registrations-0
 ```
 Выставим более частую ротацию нашему топику, раз в 10 секунд:
-```
+```bash
 ./bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name registrations --alter --add-config segment.ms=10000
 ```
 Теперь мы видим ротацию сегмента в логе.
