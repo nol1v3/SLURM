@@ -47,3 +47,16 @@ https://kafka.apache.org/documentation/#configuration
 ./bin/kafka-console-consumer.sh --topic registrations --bootstrap-server localhost:9092 --consumer-property auto.offset.reset=earliest
 ```
 Для того чтобы понять, что происходит, мы должны разобраться во внутренней структуре данных партиции.
+
+# Очистка топика (продолжение).
+Заглянув в папку с данными, видим активный сегмент (а также старые сегменты, помеченные как "deleted").
+```
+ls -la /tmp/kafka-logs/registrations-0
+```
+Выставим более частую ротацию нашему топику, раз в 10 секунд:
+```
+./bin/kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name registrations --alter --add-config segment.ms=10000
+```
+Теперь мы видим ротацию сегмента в логе.
+
+И через некоторое время увидим что данные удалились - благодаря удалению ротированного сегмента.
