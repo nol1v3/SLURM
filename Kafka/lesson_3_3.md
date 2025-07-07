@@ -60,3 +60,8 @@ ls -la /tmp/kafka-logs/registrations-0
 Теперь мы видим ротацию сегмента в логе.
 
 И через некоторое время увидим что данные удалились - благодаря удалению ротированного сегмента.
+
+# Log Compaction
+ 
+Живой пример такого приложения: Confluent Schema Registry
+https://github.com/confluentinc/schema-registry
