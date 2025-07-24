@@ -64,7 +64,12 @@ kill -s ${SIGNAL:-TERM} $(ps ax | grep -i 'kafka\.Kafka' | grep 'server0.propert
 ```
 8. Уменьшим min.insync.replicas для топика до 2 и подождем пока запись возобновится
 ```bash
-./bin/kafka-configs.sh \--alter \--bootstrap-server localhost:9092 \--entity-type topics \--entity-name registrations \--add-config min.insync.replicas=2
+./bin/kafka-configs.sh \
+--alter \
+--bootstrap-server localhost:9092 \
+--entity-type topics \
+--entity-name registrations \
+--add-config min.insync.replicas=2
 ```
 9. Остановим второй брокер, видим ошибки записи на producer NOT_ENOUGH_REPLICAS (запись прекратилась)
 ```bash
@@ -72,7 +77,12 @@ kill -s ${SIGNAL:-TERM} $(ps ax | grep -i 'kafka\.Kafka' | grep 'server1.propert
 ```
 10. Уменьшим min.insync.replicas для топика до 1 и подождем пока запись возобновится
 ```bash
-./bin/kafka-configs.sh \--alter \--bootstrap-server localhost:9092 \--entity-type topics \--entity-name registrations \--add-config min.insync.replicas=1
+./bin/kafka-configs.sh \
+--alter \
+--bootstrap-server localhost:9092 \
+--entity-type topics \
+--entity-name registrations \
+--add-config min.insync.replicas=1
 ```
 11. Остановим третий брокер, через несколько секунд увидим ошибки записи на producer “Connection to node could not be established. Broker may not be available” (запись прекратилась)
 ```bash
@@ -90,7 +100,12 @@ kill -s ${SIGNAL:-TERM} $(ps ax | grep -i 'kafka\.Kafka' | grep 'server2.propert
 ```
 14. Выставим для топика unclean.leader.election.enable=true (разрешаем выбрать лидером даже партицию с неконсистентным набором данных)
 ```bash
-./bin/kafka-configs.sh \--alter \--bootstrap-server localhost:9090 \--entity-type topics \--entity-name registrations \--add-config unclean.leader.election.enable=true
+./bin/kafka-configs.sh \
+--alter \
+--bootstrap-server localhost:9090 \
+--entity-type topics \
+--entity-name registrations \
+--add-config unclean.leader.election.enable=true
 ```
 15. Проверим, есть ли в топике лидер (видим, что лидер появился и продюсер продолжил запись)
 ```bash
