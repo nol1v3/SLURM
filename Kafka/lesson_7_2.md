@@ -49,3 +49,32 @@ http://grafana.<ваш номер студента>.edu.slurm.io/datasources
 Импортируем дашборд, копируя контент из файла https://gitlab.slurm.io/edu/kafka/-/blob/master/kafka-metrics/dashboard.json
 
 Ура, мы видим метрики!
+
+Пока наши дашборды выглядят достаточно пусто, ведь у нас нет никакого трафика. Давайте воспользуемся транзакционным приложением из урока 4 для его создания!
+
+1. Заходим на любую ноду и клонируем репо и соберем тестового клиента
+```bash
+git clone https://gitlab.slurm.io/edu/kafka.git
+cd kafka
+mvn package
+```
+2. Создаем топики
+```bash
+export USER=<ваш номер студента>
+
+/opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --bootstrap-server node-1.$USER:9092 --topic transactions-input --replication-factor 3 --partitions 3 --create
+
+/opt/kafka_2.13-2.7.0/bin/kafka-topics.sh --bootstrap-server node-1.$USER:9092 --topic transactions-output --replication-factor 3 --partitions 1 --create
+```
+3. Запускаем продюсера
+```bash
+java -cp test-clients/target/test-clients-1.0-SNAPSHOT-jar-with-dependencies.jar io.slurm.kafka.TestProducer -b node-1.$USER:9092 -c 20000000 -t transactions-input -i -s 100
+```
+4. Запускаем exactly-once консюмера
+```
+java -cp test-clients/target/test-clients-1.0-SNAPSHOT-jar-with-dependencies.jar io.slurm.kafka.ReadProcessWriteExactlyOnceApp -b node-1.$USER:9092 --group my-processor --id 1 --in transactions-input --out transactions-output
+```
+6. Через некоторое время мы увидим "ожившие" метрики трафика на нашем дашборде
+
+- Попробуйте переконфигурировать дашборд, добавить в него дополнительные метрики
+- Попробуйте остановить ноду Kafka и Zookeeper и посмотреть, как это отразится на метриках
